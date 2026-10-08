@@ -2,18 +2,14 @@ services:
   - type: web
     name: meeting-intelligence-api
     runtime: python
-    plan: starter
+    plan: free
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: python -m alembic upgrade head && python -m app.seed.seed && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
-    disk:
-      name: meeting-intelligence-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: DATABASE_URL
-        value: sqlite:////var/data/app.db
+        value: sqlite:///./app.db
       - key: PYTHON_VERSION
         value: 3.13.1
       - key: FRONTEND_URL
@@ -24,8 +20,6 @@ services:
         value: INFO
       - key: MAX_UPLOAD_BYTES
         value: "2097152"
-      - key: GEMINI_API_KEY
-        sync: false
       - key: GEMINI_MODEL
         value: gemini-1.5-flash
 
